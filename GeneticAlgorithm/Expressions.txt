@@ -1,0 +1,5 @@
+(!cva)*(!b*a)
+(b*c)*(cva)
+(!avb)*(!cva)
+(!b*a)*(cvb)
+(c*b)*(avd)*(!bvd)
