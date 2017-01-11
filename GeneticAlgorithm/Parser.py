@@ -3,57 +3,60 @@ import sys
 #Class that will parse the data
 class Parser:	
 
-	numberofclauses = 0
-	numberofliterals = 0;
-	theliterals = "";
-	file = "";
+	def __init__(self, filePath):	 
+		self.filename = filePath
+		self.numberofclauses = 0
+		self.numberofliterals = 0
+		self.theliterals = []
+		self.file = ""
+		self.__readfromfile(filePath)
 
-	def __init__(self):
-		print "Parser Evoked"
+	def __readfromfile(self, thefileName):
+		self.file = open(thefileName, "r+")
+		fileContents = self.file.read()
 		
-	def readfromfile(self, fileName):
-		file = open(fileName, "r+")
-		fileContents = file.read()
-		
-		self.parse(fileContents)
-		#file.close()
+		self.__parse(fileContents)
+		self.file.close()
 	
-	def parse(self, fileContents):
+	def __parse(self, fileContents):
+		theexpression = ""
 		num = len(fileContents)
+		lineCount = 0
 		
+		sys.stdout.write("Operators: \n! is NOT\n* is AND\nV is OR\n\n")
 		for index in range(num):
-			if fileContents[index] == "\n":
-				#this means its the end of the line
-				#calculate the data accordingly
-				sys.stdout.write("The Literals: " + Parser.theliterals + "\n")
-				sys.stdout.write("The Number Of Clauses: " + str(Parser.numberofclauses) + "\n")
-				sys.stdout.write("The Number Of Literals: " + str(Parser.numberofliterals) + "\n")
-				Parser.theliterals = ""
-				Parser.numberofclauses = 0
-				Parser.numberofliterals = 0
-			elif fileContents[index] == ")":
-				Parser.numberofclauses += 1
-			elif fileContents[index] == "a":
-				Parser.theliterals += "a"
-				Parser.numberofliterals += 1
-			elif fileContents[index] == "b":
-				Parser.theliterals += "b"
-				Parser.numberofliterals += 1
-			elif fileContents[index] == "c":
-				Parser.theliterals += "c"
-				Parser.numberofliterals += 1
-			elif fileContents[index] == "d":
-				Parser.theliterals += "d"
-				Parser.numberofliterals += 1
+			if fileContents[index] != "\n":
+				theexpression += fileContents[index]
 				
-		print fileContents
+			if fileContents[index] == "\n":
+				self.theliterals.sort()
+				lineCount += 1
 
-		
-	def getNumberOfClauses(self):
-		return Parser.numberofclauses;
+				self.__printfunction(lineCount, theexpression)
+				theexpression = ""
+				del self.theliterals[:]
+				self.numberofclauses = 0
+				self.numberofliterals = 0
+			elif fileContents[index] == ")":
+				self.numberofclauses += 1
+			elif fileContents[index] == "!":
+				continue;
+			elif fileContents[index] == "V":
+				continue;
+			elif fileContents[index] == "*":
+				continue;
+			elif fileContents[index] == "(":
+				continue;
+			else:
+				if fileContents[index] in self.theliterals:
+					continue;
+				self.numberofliterals += 1
+				self.theliterals.append(fileContents[index]);
 
-	def getLiterals(self):
-		return Parser.theliterals;
-		
-	def getNumberOfLiterals(self):
-		return Parser.numberofliterals;
+	def __printfunction(self, lines, expression):
+		sys.stdout.write("Line: " + str(lines) + "\n")
+		sys.stdout.write("The Expression: " + expression + "\n")
+		sys.stdout.write("The Literals: " + " ".join(self.theliterals) + "\n")
+		sys.stdout.write("The Number Of Clauses: " + str(self.numberofclauses) + "\n")
+		sys.stdout.write("The Number Of Literals: " + str(self.numberofliterals) + "\n" + "\n") 
+	

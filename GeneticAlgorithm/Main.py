@@ -1,7 +1,6 @@
 from Parser import *
 
 def main():
-	p = Parser()
-	fileContents = p.readfromfile("Expressions.txt")
-
+	Parser("Expressions.txt")
+	
 main()
