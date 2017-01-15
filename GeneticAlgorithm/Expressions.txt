@@ -1,5 +1,5 @@
-(!cVa)*(!b*a)
-(b*c)*(cVa)
+(!cVb)*(!b*a)
+(b*c)*(!aVc)
 (!aVb)*(!cVa)
-(!b*a)*(cVb)
+(!b*a)*(cVb)*(!aVd)
 (c*b)*(aVd)*(!bVd)
