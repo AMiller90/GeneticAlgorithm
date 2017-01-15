@@ -1,17 +1,21 @@
 import sys
 
 #Class that will parse the data
+#This class is responsible for reading in from a file and getting all of
+#the expressions in the file
 class Parser:	
-
+	#Initialize Parser object
 	def __init__(self, filePath):	 
 		self.filename = filePath
 		self.dictionary = {'a': 1, 'b': 0, 'c': 1, 'd': 0}
 		self.numberofclauses = 0
 		self.numberofliterals = 0
 		self.theliterals = []
+		self.expressionlist = []
 		self.file = ""
 		self.__readfromfile(filePath)
-
+	
+	#Read from a file
 	def __readfromfile(self, thefileName):
 		#Open the file for reading and writing
 		self.file = open(thefileName, "r+")
@@ -22,6 +26,7 @@ class Parser:
 		#Close the file
 		self.file.close()
 	
+	#Parse the data inside the file and find all the expressions
 	def __parse(self, fileContents):
 		theexpression = ""
 		num = len(fileContents)
@@ -40,9 +45,7 @@ class Parser:
 				self.theliterals.sort()
 				#Increase the line count
 				lineCount += 1
-				
-				#Evaluate the expression and return its value
-				theExpressionReturnValue = self.__evaluate(theexpression)
+				self.expressionlist.append(theexpression)
 				#Print the line count and expression
 				self.__printfunction(lineCount, theexpression)
 				#Set the expression variable to empty
@@ -85,6 +88,7 @@ class Parser:
 				#Add the character to the literals list
 				self.theliterals.append(fileContents[index]);
 
+	#Function used to print data
 	def __printfunction(self, lines, expression):
 		sys.stdout.write("Line: " + str(lines) + "\n")
 		sys.stdout.write("The Expression: " + expression + "\n")
@@ -92,7 +96,8 @@ class Parser:
 		sys.stdout.write("The Number Of Clauses: " + str(self.numberofclauses) + "\n")
 		sys.stdout.write("The Number Of Literals: " + str(self.numberofliterals) + "\n" + "\n") 
 	
-	def __evaluate(self, theExpression):
+	#Evaluates the expression
+	def EvaluateExpression(self, theExpression):
 		#Temporary variable for parsing
 		expressionCopy = ""
 		#List of the return values for each clause
@@ -130,7 +135,8 @@ class Parser:
 			theexpressionvalue = 1
 
 		return theexpressionvalue
-		
+	
+	#Evaluates the clause
 	def __EvaluateClause(self, theClause):
 		#Turn the passed in string into a list
 		evaluatedclause = list(theClause)
@@ -154,7 +160,8 @@ class Parser:
 				thereturnvalue = self.__AND(int(evaluatedclause[index-1]),int(evaluatedclause[index+1]))
 		#return the value of the clause
 		return thereturnvalue
-		
+	
+	#Performs the AND operation
 	def __AND(self, preNumber, nextNumber):
 		#If the numbers match then return one of them
 		if(preNumber == nextNumber):
@@ -162,7 +169,8 @@ class Parser:
 		#If the numbers dont match then return 0
 		else:
 			return 0
-		
+	
+	#Performs the OR operation
 	def __OR(self, preNumber, nextNumber):
 		#If the numbers dont match then return 1
 		if preNumber != nextNumber:
@@ -170,7 +178,8 @@ class Parser:
 		#If the numbers do match then return one of them..it will either be 1 or 0
 		else:
 			return preNumber
-		
+	
+	#Performs the NOT operation
 	def __NOT(self, nextNumber):
 	
 		#If the number is 1 then return 0
@@ -179,4 +188,7 @@ class Parser:
 		#If number is not 1 then return 1
 		else:
 			return 1
-		
+	
+	#Get the list of expressions
+	def getExpressions(self):
+		return self.expressionlist
