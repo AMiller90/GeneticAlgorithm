@@ -17,14 +17,18 @@ begin
 			5.Set time t +=1'''
 			
 def main():
+
 	theTime = 0
 
 	#Parses the file and finds all expressions in the file
 	p = Parser("Expressions.txt")
-	#Gets the list of expressions that were found
+	#Gets the list of expressions that were found in the file
 	lists = p.getExpressions()	
 	
 	#Evaluate expression first - to run each expression in the list we would need to loop through the list and then run algorithm
+	p.EvaluateExpression(lists[4])
+
+	p.SelectMembers()
 	#while the fitness score is not equal to the total number of clauses
 	'''while p.getFitnessScore() != p.getNumberOfClauses():
 		#Run algorithm'''
