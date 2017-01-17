@@ -5,16 +5,15 @@ import sys
 #the expressions in the file
 class Parser:	
 	#Initialize Parser object
-	def __init__(self, filePath):	 
-		self.filename = filePath
+	def __init__(self, filePath):
 		self.dictionary = {'a': 1, 'b': 0, 'c': 1, 'd': 0}
 		self.numberofclauses = 0
-		self.numberofliterals = 0
-		self.theliterals = []
 		self.expressionlist = []
 		self.file = ""
 		self.__readfromfile(filePath)
-	
+		self.fitnessscore = 0
+		self.totalclauses = 0
+		
 	#Read from a file
 	def __readfromfile(self, thefileName):
 		#Open the file for reading and writing
@@ -31,6 +30,8 @@ class Parser:
 		theexpression = ""
 		num = len(fileContents)
 		lineCount = 0
+		theliterals = []
+		numberofliterals = 0
 		
 		sys.stdout.write("Operators: \n! is NOT\n* is AND\nV is OR\n\n")
 		for index in range(num):
@@ -42,20 +43,20 @@ class Parser:
 			#If the current index of the file contents is a new line
 			if fileContents[index] == "\n":
 				#Sort the literals
-				self.theliterals.sort()
+				theliterals.sort()
 				#Increase the line count
 				lineCount += 1
 				self.expressionlist.append(theexpression)
 				#Print the line count and expression
-				self.__printfunction(lineCount, theexpression)
+				self.__printfunction(lineCount, theexpression, theliterals, numberofliterals)
 				#Set the expression variable to empty
 				theexpression = ""
 				#Delete the literals
-				del self.theliterals[:]
+				del theliterals[:]
 				#Variable for the number of clauses
 				self.numberofclauses = 0
 				#Variable for the number of literals
-				self.numberofliterals = 0
+				numberofliterals = 0
 			#If index is equal to )
 			elif fileContents[index] == ")":
 				#Increase clauses count
@@ -79,25 +80,29 @@ class Parser:
 			#Else
 			else:
 				#Check if the index is inside the literals list, if it is
-				if fileContents[index] in self.theliterals:
+				if fileContents[index] in theliterals:
 					#Just continue
 					continue;
 				#If the index is not inside the list then..
 				#Increment the number of literals
-				self.numberofliterals += 1
+				numberofliterals += 1
 				#Add the character to the literals list
-				self.theliterals.append(fileContents[index]);
+				theliterals.append(fileContents[index]);
 
 	#Function used to print data
-	def __printfunction(self, lines, expression):
+	def __printfunction(self, lines, expression, theliterals, numofliterals):
 		sys.stdout.write("Line: " + str(lines) + "\n")
 		sys.stdout.write("The Expression: " + expression + "\n")
-		sys.stdout.write("The Literals: " + " ".join(self.theliterals) + "\n")
+		sys.stdout.write("The Literals: " + " ".join(theliterals) + "\n")
 		sys.stdout.write("The Number Of Clauses: " + str(self.numberofclauses) + "\n")
-		sys.stdout.write("The Number Of Literals: " + str(self.numberofliterals) + "\n" + "\n") 
+		sys.stdout.write("The Number Of Literals: " + str(numofliterals) + "\n" + "\n") 
 	
 	#Evaluates the expression
 	def EvaluateExpression(self, theExpression):
+		#The value of the expression
+		thevalue = 0
+		#New expression has new clauses, so reset fitness score
+		self.fitnessscore = 0
 		#Temporary variable for parsing
 		expressionCopy = ""
 		#List of the return values for each clause
@@ -115,14 +120,19 @@ class Parser:
 				expressionCopy += s
 			elif(s == ")"):
 				expressionCopy += s
+				self.numberofclauses += 1
+				self.totalclauses = self.numberofclauses
 				#Evaluate the clause that is made of numbers and return its value
-				thevalue = self.__EvaluateClause(expressionCopy)
+				thevalue = self.EvaluateClause(expressionCopy)
+				if thevalue == 1:
+					self.fitnessscore += 1
 				clauseReturnValueslist.append(thevalue)
 				#Reset to empty, so as it continues to loop it will evaluate next clause
 				expressionCopy = ""
 			elif(self.dictionary.has_key(s)):
 				expressionCopy += str(self.dictionary.get(s))
-				
+		
+		self.numberofclauses = 0
 		#Now to find the value of an expression you must use the AND operation for each
 		#returned value of each clause.
 		#However, do to the fact of using a list we only have to check if their is a 0
@@ -133,11 +143,11 @@ class Parser:
 			theexpressionvalue = 0
 		else:
 			theexpressionvalue = 1
-
+		
 		return theexpressionvalue
 	
 	#Evaluates the clause
-	def __EvaluateClause(self, theClause):
+	def EvaluateClause(self, theClause):
 		#Turn the passed in string into a list
 		evaluatedclause = list(theClause)
 		#Variable to represent the return value
@@ -158,6 +168,7 @@ class Parser:
 			elif evaluatedclause[index] == "*" and evaluatedclause[index+1] != "(":
 				#Perform the AND operation on the previous index and next index then return the value
 				thereturnvalue = self.__AND(int(evaluatedclause[index-1]),int(evaluatedclause[index+1]))
+				
 		#return the value of the clause
 		return thereturnvalue
 	
@@ -192,3 +203,9 @@ class Parser:
 	#Get the list of expressions
 	def getExpressions(self):
 		return self.expressionlist
+		
+	def getFitnessScore(self):
+		return self.fitnessscore
+		
+	def getNumberOfClauses(self):
+		return self.totalclauses
