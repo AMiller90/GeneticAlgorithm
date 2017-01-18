@@ -1,4 +1,4 @@
-(!cVb*a*b)*(!b*a*dVc)
+(!cVb*aVb)*(!b*a*dVc)
 (b*cVd*b)*(!aVc*dVa)
 (!aVc*bVa)*(!cVa*bVd)
 (!b*aVc*d)*(cVbVa*d)*(!aVd*cVb)

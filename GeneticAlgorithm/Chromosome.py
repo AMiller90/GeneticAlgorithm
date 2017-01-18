@@ -1,4 +1,5 @@
 import sys
+import random
 
 #Class that will be the object to represent a clause of an expression
 class Chromosome:

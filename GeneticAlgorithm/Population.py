@@ -13,14 +13,83 @@ class Population:
 		self.numberofclauses = 0
 		self.dictionary = {'a': 1, 'b': 0, 'c': 1, 'd': 0}
 		self.theSelectedMembers = []
+		self.theOffspring = ""
+		self.EvaluateExpression()
 		
 	#Get the current population
 	def getPopulation(self):
 		return self.theExpression
 	
 	#Set the population to its new changed state
-	def changePopulation(self,theNewExpression):
-		self.theExpression = theNewExpression
+	def changePopulation(self):
+		copyOfExpression = self.theExpression
+		
+		#Put in a mutation rate - We are only changing the value of 0 or 1
+		#Do no touch the operators
+		randomnum1 = random.randint(0, len(self.theOffspring)-1)
+		randomnum2 = random.randint(0, len(self.theOffspring)-1)
+		
+		mutationRate1 = randomnum1 / 3
+		mutationRate2 = randomnum2 / 3
+		
+		#convert to list to prepare for mutation
+		self.theOffspring = list(self.theOffspring)
+		
+		if mutationRate1 < 2:
+			if self.theOffspring[mutationRate1] == 1:
+				print("The original")
+				print(self.theOffspring[mutationRate1])
+				self.theOffspring[mutationRate1] = 0
+			else:
+				print("The original")
+				print(self.theOffspring[mutationRate1])
+				self.theOffspring[mutationRate1] = 1
+			print("The changed")
+			print(self.theOffspring[mutationRate1])
+			
+		if mutationRate2 < 2:
+			if self.theOffspring[mutationRate2] == 1:
+				print("The original")
+				print(self.theOffspring[mutationRate2])
+				self.theOffspring[mutationRate2] = 0
+			else:
+				print("The original")
+				print(self.theOffspring[mutationRate2])
+				self.theOffspring[mutationRate2] = 1
+			print("The changed")
+			print(self.theOffspring[mutationRate2])
+			
+		#Convert to list for parsing of letters to change values based on
+		#mutation
+		copyOfExpression = list(copyOfExpression)
+		
+		print(copyOfExpression)
+		
+		
+		for i in range(len(copyOfExpression)):
+			if copyOfExpression[i] == "a":
+				avalue = self.dictionary.get(copyOfExpression[i])
+				
+				
+				
+				copyOfExpression[i] = "z"
+			elif copyOfExpression[i] == "b":
+				bvalue = self.dictionary.get(copyOfExpression[i])
+				copyOfExpression[i] = "z"
+			elif copyOfExpression[i] == "c":
+				cvalue = self.dictionary.get(copyOfExpression[i])
+				copyOfExpression[i] = "z"
+			elif copyOfExpression[i] == "d":
+				dvalue = self.dictionary.get(copyOfExpression[i])
+				copyOfExpression[i] = "z"
+		
+		#Convert list back to string
+		copyOfExpression = ''.join(copyOfExpression)
+		
+		print(copyOfExpression)
+		
+		print(self.theOffspring)
+		
 		
 	#Evaluates the expression
 	def EvaluateExpression(self):
@@ -55,7 +124,6 @@ class Population:
 				self.theSelectedMembers.append(chromosome.getEvaluatedClause())
 				if thevalue == 1:
 					self.fitnessscore += 1
-				#self.__EvaluateClause(expressionCopy)
 				self.clauseReturnValueslist.append(thevalue)
 				#Reset to empty, so as it continues to loop it will evaluate next clause
 				expressionCopy = ""				
@@ -81,10 +149,17 @@ class Population:
 	def SelectMembers(self):	
 		length = len(self.theSelectedMembers)
 
-		parent1 = random.randint(0,length-1)
-		parent2 = random.randint(0,length-1)
+		parent1index = random.randint(0,length-1)
+		parent1 = self.theSelectedMembers[parent1index]
+		del self.theSelectedMembers[parent1index]
 		
-		self.__MakeOffspring(parent1, parent2)
+		length = len(self.theSelectedMembers)
+		
+		parent2index = random.randint(0,length-1)
+		parent2 = self.theSelectedMembers[parent2index]
+		del self.theSelectedMembers[parent2index]
+		
+		self.theOffspring = self.__MakeOffspring(parent1, parent2)
 	
 	#Make offspring
 	def __MakeOffspring(self, parent1, parent2):
@@ -95,25 +170,21 @@ class Population:
 		temp = ""
 		
 		#Loop through the selected clause and check if the the index is a number if it is then add to list
-		for i in range(len(self.theSelectedMembers[parent1])):
-			if self.theSelectedMembers[parent1][i] == "1":
-				numbersonly1.append(self.theSelectedMembers[parent1][i])
-			if self.theSelectedMembers[parent1][i] == "0":
-				numbersonly1.append(self.theSelectedMembers[parent1][i])
+		for i in range(len(parent1)):
+			if parent1[i] == "1":
+				numbersonly1.append(parent1[i])
+			if parent1[i] == "0":
+				numbersonly1.append(parent1[i])
 		
 		#Loop through the selected clause and check if the the index is a number if it is then add to list		
-		for i in range(len(self.theSelectedMembers[parent2])):
-			if self.theSelectedMembers[parent2][i] == "1":
-				numbersonly2.append(self.theSelectedMembers[parent2][i])
-			if self.theSelectedMembers[parent2][i] == "0":
-				numbersonly2.append(self.theSelectedMembers[parent2][i])
+		for i in range(len(parent2)):
+			if parent2[i] == "1":
+				numbersonly2.append(parent2[i])
+			if parent2[i] == "0":
+				numbersonly2.append(parent2[i])
 		
 		num = len(numbersonly1)
-		
-		#print(sibling1)
-		#print(sibling2)
-		
-		#print("\n")
+
 		#Range from middle of string to end - Switch back ends
 		for i in range(num/2,num):
 			temp = sibling1[i]
@@ -127,8 +198,10 @@ class Population:
 			thereturnvalue = self.__NOT(int(sibling2[i]))
 			sibling2[i] = str(thereturnvalue)
 
-		#print(sibling1)
-		#print(sibling2)
+		theChildren = ''.join(sibling1)
+		theChildren += ''.join(sibling2)
+		
+		return theChildren
 	
 	#Performs the NOT operation
 	def __NOT(self, nextNumber):
@@ -151,3 +224,4 @@ class Population:
 	#Get the return values of all clauses
 	def getClauseEvalList(self):
 		return self.clauseReturnValueslist
+		
