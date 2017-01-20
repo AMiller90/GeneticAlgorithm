@@ -36,6 +36,9 @@ class Chromosome:
 				#Perform the AND operation on the previous index and next index then return the value
 				thereturnvalue = self.__AND(int(self.theEvaluatedClause[index-1]),int(self.theEvaluatedClause[index+1]))
 		
+		#convert back to string for clarity
+		self.theEvaluatedClause = ''.join(self.theEvaluatedClause)
+		
 		#return the value of the clause
 		return thereturnvalue
 	

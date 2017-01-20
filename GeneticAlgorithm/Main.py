@@ -32,21 +32,21 @@ def main():
 	#Once algorithm is working correctly then we will code it to where it will run
 	#the algorithm for each expression found
 	#Initialize a population
-	population = Population(lists[0])
+	population = Population(lists[3])
 	
-	population.SelectMembers()
-	population.changePopulation()
 	#while the fitness score is not equal to the total number of clauses
-	'''while population.getFitnessScore() != population.getNumberOfClauses():
+	#while population.getFitnessScore() != population.getNumberOfClauses():
 		#Run algorithm
 		#Step 1 - Evaluate fitness of each member of Population
-		#population.EvaluateExpression()
+	population.EvaluateExpression()
 		#Step 2 - Select members based on fitness
 		#Step 3 - Make OffSpring internally done in Select Members function
-		#population.SelectMembers()
-		#Step4 - Replace candidates based on Fitness'''
-		
-	#Step5 - Increment generation
+	population.SelectMembers()
+		#Step4 - Replace candidates based on Fitness
+	#population.changePopulation()
+		#Step5 - Increment generation
 	theTime += 1
+		
+	#print(theTime)
 
 main()

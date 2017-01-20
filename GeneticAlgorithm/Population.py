@@ -14,7 +14,8 @@ class Population:
 		self.dictionary = {'a': 1, 'b': 0, 'c': 1, 'd': 0}
 		self.theSelectedMembers = []
 		self.theOffspring = ""
-		self.EvaluateExpression()
+		self.theparentlist = []
+		self.__EvaluateOnInit()
 		
 	#Get the current population
 	def getPopulation(self):
@@ -26,6 +27,7 @@ class Population:
 		thenewExpression = []
 		#The index to swap
 		offspringIndex = 0
+		
 		
 		#Put in a mutation rate - We are only changing the value of 0 or 1
 		#Do not touch the operators
@@ -92,21 +94,14 @@ class Population:
 					thenewExpression[i] = "b"
 				else:
 					thenewExpression[i] = "d"
-		
-		print("Sibling values: ")
-		print(self.theOffspring)
-		print("\n")
-		print("After Change")
-		print(thenewExpression)
-		
+
 		#Convert list back to string
 		thenewExpression = ''.join(thenewExpression)
 		print(thenewExpression)
 
 		#Set the expression to new one
 		self.theExpression = thenewExpression
-		
-		
+				
 	#Evaluates the expression
 	def EvaluateExpression(self):
 		#The value of the expression
@@ -136,6 +131,7 @@ class Population:
 				chromosome = Chromosome(expressionCopy)
 				#Evaluate the clause that is made of numbers and return its value
 				thevalue = chromosome.EvaluateClause()
+				self.theparentlist.append(chromosome.getEvaluatedClause())
 				#The list that will be used for selection
 				self.theSelectedMembers.append(chromosome.getEvaluatedClause())
 				if thevalue == 1:
@@ -145,8 +141,6 @@ class Population:
 				expressionCopy = ""				
 			elif(self.dictionary.has_key(s)):
 				expressionCopy += str(self.dictionary.get(s))
-		
-		
 		self.numberofclauses = 0
 		#Now to find the value of an expression you must use the AND operation for each
 		#returned value of each clause.
@@ -161,10 +155,48 @@ class Population:
 		
 		return theexpressionvalue
 	
+	#Evaluate the expression on init
+	def __EvaluateOnInit(self):
+		#The value of the expression
+		thevalue = 0
+		#New expression has new clauses, so reset fitness score
+		self.fitnessscore = 0
+		#Temporary variable for parsing
+		expressionCopy = ""
+		#List of the return values for each clause
+		self.clauseReturnValueslist = []
+		#Loop through expression and make a copy with the literals 
+		#replaced with numbers accordingly
+		for s in self.theExpression:
+			if(s == "!"):
+				expressionCopy += s
+			elif(s == "V"):
+				expressionCopy += s
+			elif(s == "*"):
+				expressionCopy += s
+			elif(s == "("):
+				expressionCopy += s
+			elif(s == ")"):
+				expressionCopy += s
+				self.numberofclauses += 1
+				self.totalclauses = self.numberofclauses
+				#Create Chromosome Object 
+				chromosome = Chromosome(expressionCopy)
+				#Evaluate the clause that is made of numbers and return its value
+				thevalue = chromosome.EvaluateClause()
+				if thevalue == 1:
+					self.fitnessscore += 1
+				self.clauseReturnValueslist.append(thevalue)
+				#Reset to empty, so as it continues to loop it will evaluate next clause
+				expressionCopy = ""				
+			elif(self.dictionary.has_key(s)):
+				expressionCopy += str(self.dictionary.get(s))
+		
+		
+		self.numberofclauses = 0
+		
 	#Selects the members based on fitness
 	def SelectMembers(self):
-		
-		self.theSelectedMembers = list(self.theSelectedMembers)
 		length = len(self.theSelectedMembers)
 
 		parent1index = random.randint(0,length-1)
@@ -177,8 +209,14 @@ class Population:
 		parent2 = self.theSelectedMembers[parent2index]
 		del self.theSelectedMembers[parent2index]
 		
+		for s in self.theparentlist:
+			if s == parent1:
+				print("Found parent1")
+			if s == parent2:
+				print("Found parent2")
+				
 		self.theOffspring = self.__MakeOffspring(parent1, parent2)
-	
+		
 	#Make offspring
 	def __MakeOffspring(self, parent1, parent2):
 		numbersonly1 = []
