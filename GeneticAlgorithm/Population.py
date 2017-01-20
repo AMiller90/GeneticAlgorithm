@@ -22,10 +22,13 @@ class Population:
 	
 	#Set the population to its new changed state
 	def changePopulation(self):
-		copyOfExpression = self.theExpression
+		#Create list for valuse of expression
+		thenewExpression = []
+		#The index to swap
+		offspringIndex = 0
 		
 		#Put in a mutation rate - We are only changing the value of 0 or 1
-		#Do no touch the operators
+		#Do not touch the operators
 		randomnum1 = random.randint(0, len(self.theOffspring)-1)
 		randomnum2 = random.randint(0, len(self.theOffspring)-1)
 		
@@ -36,59 +39,72 @@ class Population:
 		self.theOffspring = list(self.theOffspring)
 		
 		if mutationRate1 < 2:
-			if self.theOffspring[mutationRate1] == 1:
-				print("The original")
-				print(self.theOffspring[mutationRate1])
-				self.theOffspring[mutationRate1] = 0
+			if self.theOffspring[mutationRate1] == '1':
+				self.theOffspring[mutationRate1] = '0'
 			else:
-				print("The original")
-				print(self.theOffspring[mutationRate1])
-				self.theOffspring[mutationRate1] = 1
-			print("The changed")
-			print(self.theOffspring[mutationRate1])
+				self.theOffspring[mutationRate1] = '1'
 			
 		if mutationRate2 < 2:
-			if self.theOffspring[mutationRate2] == 1:
-				print("The original")
-				print(self.theOffspring[mutationRate2])
-				self.theOffspring[mutationRate2] = 0
+			if self.theOffspring[mutationRate2] == '1':
+				self.theOffspring[mutationRate2] = '0'
 			else:
-				print("The original")
-				print(self.theOffspring[mutationRate2])
-				self.theOffspring[mutationRate2] = 1
-			print("The changed")
-			print(self.theOffspring[mutationRate2])
-			
-		#Convert to list for parsing of letters to change values based on
-		#mutation
-		copyOfExpression = list(copyOfExpression)
+				self.theOffspring[mutationRate2] = '1'
 		
-		print(copyOfExpression)
+		#Loop through the expression and get the values
+		#of the current literals
+		for i in range(len(self.theExpression)):
+			if self.theExpression[i] == "a":
+				avalue = self.dictionary.get(self.theExpression[i])
+				thenewExpression.append(str(avalue))
+			elif self.theExpression[i] == "b":
+				bvalue = self.dictionary.get(self.theExpression[i])
+				thenewExpression.append(str(bvalue))
+			elif self.theExpression[i] == "c":
+				cvalue = self.dictionary.get(self.theExpression[i])
+				thenewExpression.append(str(cvalue))
+			elif self.theExpression[i] == "d":
+				dvalue = self.dictionary.get(self.theExpression[i])
+				thenewExpression.append(str(dvalue))
+			else:
+				thenewExpression.append(self.theExpression[i])
+	
+		#Loop through the list and change accordingly to offspring
+		for i in range(len(thenewExpression)):
+			if thenewExpression[i] == "1":
+				thenewExpression[i] = self.theOffspring[offspringIndex]
+				offspringIndex+=1
+			elif thenewExpression[i] == "0":
+				thenewExpression[i] = self.theOffspring[offspringIndex]
+				offspringIndex+=1
+		#Loop through the list of changed values and make them literals
+		for i in range(len(thenewExpression)):
+			if thenewExpression[i] == "1":
+				#We will randomize so it wont always be the same literal
+				number = random.randint(0,1)
+				if number == 1:
+					thenewExpression[i] = "a"
+				else:
+					thenewExpression[i] = "c"
+			elif thenewExpression[i] == "0":
+				#We will randomize so it wont always be the same literal
+				number = random.randint(0,1)
+				if number == 1:
+					thenewExpression[i] = "b"
+				else:
+					thenewExpression[i] = "d"
 		
-		
-		for i in range(len(copyOfExpression)):
-			if copyOfExpression[i] == "a":
-				avalue = self.dictionary.get(copyOfExpression[i])
-				
-				
-				
-				copyOfExpression[i] = "z"
-			elif copyOfExpression[i] == "b":
-				bvalue = self.dictionary.get(copyOfExpression[i])
-				copyOfExpression[i] = "z"
-			elif copyOfExpression[i] == "c":
-				cvalue = self.dictionary.get(copyOfExpression[i])
-				copyOfExpression[i] = "z"
-			elif copyOfExpression[i] == "d":
-				dvalue = self.dictionary.get(copyOfExpression[i])
-				copyOfExpression[i] = "z"
+		print("Sibling values: ")
+		print(self.theOffspring)
+		print("\n")
+		print("After Change")
+		print(thenewExpression)
 		
 		#Convert list back to string
-		copyOfExpression = ''.join(copyOfExpression)
-		
-		print(copyOfExpression)
-		
-		print(self.theOffspring)
+		thenewExpression = ''.join(thenewExpression)
+		print(thenewExpression)
+
+		#Set the expression to new one
+		self.theExpression = thenewExpression
 		
 		
 	#Evaluates the expression
@@ -146,7 +162,9 @@ class Population:
 		return theexpressionvalue
 	
 	#Selects the members based on fitness
-	def SelectMembers(self):	
+	def SelectMembers(self):
+		
+		self.theSelectedMembers = list(self.theSelectedMembers)
 		length = len(self.theSelectedMembers)
 
 		parent1index = random.randint(0,length-1)
@@ -200,7 +218,7 @@ class Population:
 
 		theChildren = ''.join(sibling1)
 		theChildren += ''.join(sibling2)
-		
+
 		return theChildren
 	
 	#Performs the NOT operation
