@@ -115,44 +115,7 @@ class Population:
 			elif par2[i] == "0":
 				par2[i] = self.theOffspring[offspringIndex]
 				offspringIndex+=1
-		
-		#print("Pre index")
-		#print(self.theEvaluatedClauses)
-		
-		#Loop through the list of changed values and make them literals
-		for i in range(len(par1)):
-			if par1[i] == "1":
-				#We will randomize so it wont always be the same literal
-				number = random.randint(0,1)
-				if number == 1:
-					par1[i] = "a"
-				else:
-					par1[i] = "c"
-			elif par1[i] == "0":
-				#We will randomize so it wont always be the same literal
-				number = random.randint(0,1)
-				if number == 1:
-					par1[i] = "b"
-				else:
-					par1[i] = "d"
-		
-		#Loop through the list of changed values and make them literals
-		for i in range(len(par2)):
-			if par2[i] == "1":
-				#We will randomize so it wont always be the same literal
-				number = random.randint(0,1)
-				if number == 1:
-					par2[i] = "a"
-				else:
-					par2[i] = "c"
-			elif par2[i] == "0":
-				#We will randomize so it wont always be the same literal
-				number = random.randint(0,1)
-				if number == 1:
-					par2[i] = "b"
-				else:
-					par2[i] = "d"
-		
+	
 		
 		#Convert back to string for storing
 		par1 = ''.join(par1)
@@ -171,6 +134,34 @@ class Population:
 		print(self.theEvaluatedClauses)
 		print("\n")
 		
+		#Fix error of "*" character being added to the front of an expression
+		if self.theEvaluatedClauses[0][0] == "*":
+			thelisttochange = list(self.theEvaluatedClauses[0])
+			thelisttochange[0] = ""
+			self.theEvaluatedClauses[0] = ''.join(thelisttochange)
+		
+		#Loop through the list of changed values and make them literals
+		for i in range(len(self.theEvaluatedClauses)):
+			#Convert current string to list for changing
+			thestringtochange = list(self.theEvaluatedClauses[i])
+			for index in range(len(thestringtochange)):
+				if thestringtochange[index] == "1":
+					#We will randomize so it wont always be the same literal
+					number = random.randint(0,1)
+					if number == 1:
+						thestringtochange[index] = "a"
+					else:
+						thestringtochange[index] = "c"
+				elif thestringtochange[index] == "0":
+					#We will randomize so it wont always be the same literal
+					number = random.randint(0,1)
+					if number == 1:
+						thestringtochange[index] = "b"
+					else:
+						thestringtochange[index] = "d"
+			#Convert back to string and set it as the index value
+			self.theEvaluatedClauses[i] = ''.join(thestringtochange)
+		
 		#Convert list back to string
 		thenewExpression = ''.join(self.theEvaluatedClauses)
 		
@@ -181,7 +172,9 @@ class Population:
 		self.theparentlist = []
 		#Set the expression to new one
 		self.theExpression = thenewExpression
-		
+		#ReEvaluate the expression see if it has found the solution
+		self.__ReEvaluateExpression(self.theExpression)
+			
 	#Evaluates the expression
 	def EvaluateExpression(self):
 		#The value of the expression
@@ -363,6 +356,40 @@ class Population:
 		#return the children
 		return theChildren
 	
+	#ReEvaluate the Expression 
+	def __ReEvaluateExpression(self, theExpression):
+		#The value of the expression
+		thevalue = 0
+		#New expression has new clauses, so reset fitness score
+		self.fitnessscore = 0
+		#Temporary variable for parsing
+		expressionCopy = ""
+		#Temporary variable for parsing
+		referenceCopy = ""
+		#List of the return values for each clause
+		self.clauseReturnValueslist = []
+		#Loop through expression and make a copy with the literals 
+		#replaced with numbers accordingly
+		for i in range(len(self.theExpression)):
+			if(self.theExpression[i] == ")"):
+				expressionCopy += self.theExpression[i]
+				self.numberofclauses += 1
+				self.totalclauses = self.numberofclauses				
+				#Create Chromosome Object 
+				chromosome = Chromosome(expressionCopy)
+				#Evaluate the clause that is made of numbers and return its value
+				thevalue = chromosome.EvaluateClause()
+				if thevalue == 1:
+					self.fitnessscore += 1
+				#Reset to empty, so as it continues to loop it will evaluate next clause
+				expressionCopy = ""
+			elif(self.dictionary.has_key(self.theExpression[i])):
+				expressionCopy += str(self.dictionary.get(self.theExpression[i]))
+			else:
+				expressionCopy += self.theExpression[i]
+				
+		self.numberofclauses = 0
+
 	#Performs the NOT operation
 	def __NOT(self, nextNumber):
 	

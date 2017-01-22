@@ -32,7 +32,7 @@ def main():
 	#Once algorithm is working correctly then we will code it to where it will run
 	#the algorithm for each expression found
 	#Initialize a population
-	population = Population(lists[4])
+	population = Population(lists[0])
 	
 	#while the fitness score is not equal to the total number of clauses
 	while population.getFitnessScore() != population.getNumberOfClauses():
@@ -44,13 +44,13 @@ def main():
 		population.SelectMembers()
 		#Step4 - Replace candidates based on Fitness
 		population.changePopulation()
-		#print("The New Expression")
-		#print(population.getPopulation())
+		print("The New Expression")
+		print(population.getPopulation())
 		#Step5 - Increment generation
 		theTime += 1
 	
-	print("The New Expression")
-	print(population.getPopulation())
+	#print("The New Expression")
+	#print(population.getPopulation())
 	print("The Generation")
 	print(theTime)
 

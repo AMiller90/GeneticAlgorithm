@@ -5,7 +5,9 @@ import random
 class Chromosome:
 	#Initialize Chromosome Object
 	def __init__(self, newClause):
+		#The clause to be used
 		self.theClause = newClause
+		#The list of clauses evaluated
 		self.theEvaluatedClause = []
 		
 	#Get the clause
