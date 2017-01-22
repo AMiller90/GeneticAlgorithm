@@ -7,17 +7,31 @@ from Chromosome import *
 class Population:
 	#Initialize Population Object
 	def __init__(self, newExpression):
+		#Set the expression
 		self.theExpression = newExpression
-		self.clauseReturnValueslist = []
+		#Print
+		print("The initial Expression")
+		print(self.theExpression)
+		print("\n")
+		#Fitness Score reference
 		self.fitnessscore = 0
+		#Total Clauses reference
 		self.totalclauses = 0
+		#Number of clauses reference
 		self.numberofclauses = 0
+		#The dictionary used for mapping values
 		self.dictionary = {'a': 1, 'b': 0, 'c': 1, 'd': 0}
+		#The members selected reference
 		self.theSelectedMembers = []
+		#The offspring reference
 		self.theOffspring = ""
+		#The list of the parents
 		self.theparentlist = []
+		#The list of clauses after being evaluated
 		self.theEvaluatedClauses = []
+		#Holds reference to the initial expression
 		self.theExpressionReference = []
+		#The function for evaluating an expression on initialization
 		self.__EvaluateOnInit()
 		
 	#Get the current population
@@ -51,69 +65,81 @@ class Population:
 		par1 = list(self.theparentlist[0])
 		par2 = list(self.theparentlist[1])
 
-		print("\n")
-		print("parent1")
-		print(par1)
-		print("parent2")
-		print(par2)
 		
 		#Loop through and find the parents in the list
 		#Store the index for future changes
 		for i in range(len(self.theEvaluatedClauses)):
-			print("The clause list")
-			print(self.theEvaluatedClauses[i])
-			if self.theEvaluatedClauses[i] == self.theparentlist[0]:
-				print("Found parent1")
-				print(self.theparentlist[0])
+			#If the current index is equal to parent 1
+			if (self.theEvaluatedClauses[i] == self.theparentlist[0]):
+				#Store its index
 				parent1index = i
+			#If the current index is equal to parent 2
 			elif self.theEvaluatedClauses[i] == self.theparentlist[1]:
-				print("Found parent2")
-				print(self.theparentlist[1])
+				#Store its index
 				parent2index = i
+			#Else
 			else:
+				#Set the clause to the expression clause that wasnt
+				#chosen as a parent
 				self.theEvaluatedClauses[i] = self.theExpressionReference[i]
 				
 		self.theExpressionReference = []
 		
-		
-		c1 = Chromosome(self.theparentlist[0])
-		print(c1.EvaluateClause())
-		c2 = Chromosome(self.theparentlist[1])
-		print(c2.EvaluateClause())
-		
-		#The chance of mutating the first sibling at
-		#the given index
+		#The chance of mutating the first sibling
 		if mutationRate1 > 0:
+			#Mutate the given index
+			#If the current offspring is a 1
 			if self.theOffspring[mutationRate1] == '1':
+				#Make it a 0
 				self.theOffspring[mutationRate1] = '0'
+			#Else
 			else:
+				#Mutate the given index
+				#Make it a 1
 				self.theOffspring[mutationRate1] = '1'
 		
-		#The chance of mutating the second sibling at
-		#the given index
+		#The chance of mutating the second sibling
 		if mutationRate2 > 0:
+			#Mutate the given index
+			#If the current offspring is a 1
 			if self.theOffspring[mutationRate2] == '1':
+				#Make it a 0
 				self.theOffspring[mutationRate2] = '0'
+			#Else
 			else:
+				#Mutate the given index
+				#Make it a 1
 				self.theOffspring[mutationRate2] = '1'
 
 		
 		#Loop through the list and change parent1 accordingly to offspring
 		for i in range(len(par1)):
-			if par1[i] == "1":
+			#If the index is 1
+			if (par1[i] == "1"):
+				#Its a number so set it to the offspring number
 				par1[i] = self.theOffspring[offspringIndex]
+				#Increment the index by 1
 				offspringIndex+=1
-			elif par1[i] == "0":
+			#If the index is 0
+			elif (par1[i] == "0"):
+				#Its a number so set it to the offspring number
 				par1[i] = self.theOffspring[offspringIndex]
+				#Increment the index by 1
 				offspringIndex+=1
-		
+				
 		#Loop through the list and change parent2 accordingly to offspring
 		for i in range(len(par2)):
-			if par2[i] == "1":
+			#If the index is 1 or 0
+			if (par2[i] == "1"):
+				#Its a number so set it to the offspring number
 				par2[i] = self.theOffspring[offspringIndex]
+				#Increment the index by 1
 				offspringIndex+=1
-			elif par2[i] == "0":
-				par2[i] = self.theOffspring[offspringIndex]
+			#If the index is 0
+			elif (par2[i] == "0"):
+				#Its a number so set it to the offspring number
+				par2[i]  = self.theOffspring[offspringIndex]
+				#Increment the index by 1
 				offspringIndex+=1
 	
 		
@@ -121,44 +147,50 @@ class Population:
 		par1 = ''.join(par1)
 		par2 = ''.join(par2)
 		
-		
-		#Now set the evaluated clause set with the changes
-		print("Parent1 index of clause list")
-		print(parent1index)
+		#Now set the evaluated clause with the changes
 		self.theEvaluatedClauses[parent1index] = par1
-		print("Parent2 index of clause list")
-		print(parent2index)
 		self.theEvaluatedClauses[parent2index] = par2
-		
-		print("Post index")
-		print(self.theEvaluatedClauses)
-		print("\n")
 		
 		#Fix error of "*" character being added to the front of an expression
 		if self.theEvaluatedClauses[0][0] == "*":
+			#Convert to a list for changing
 			thelisttochange = list(self.theEvaluatedClauses[0])
+			#Change it to empty
 			thelisttochange[0] = ""
+			#Set the clause to the list converted to a string
 			self.theEvaluatedClauses[0] = ''.join(thelisttochange)
 		
 		#Loop through the list of changed values and make them literals
 		for i in range(len(self.theEvaluatedClauses)):
 			#Convert current string to list for changing
 			thestringtochange = list(self.theEvaluatedClauses[i])
+			#Loop through the list to change
 			for index in range(len(thestringtochange)):
-				if thestringtochange[index] == "1":
+				#If the index is a 1
+				if (thestringtochange[index] == "1"):
 					#We will randomize so it wont always be the same literal
 					number = random.randint(0,1)
-					if number == 1:
+					#If the number is a 1
+					if (number == 1):
+						#Set it to "a"
 						thestringtochange[index] = "a"
+					#Else
 					else:
+						#Set it to "c"
 						thestringtochange[index] = "c"
+				#Elif the index is 0
 				elif thestringtochange[index] == "0":
 					#We will randomize so it wont always be the same literal
 					number = random.randint(0,1)
-					if number == 1:
+					#If the number is a 1
+					if (number == 1):
+						#Set it to "b"
 						thestringtochange[index] = "b"
+					#Else
 					else:
+						#Set it to "d"
 						thestringtochange[index] = "d"
+						
 			#Convert back to string and set it as the index value
 			self.theEvaluatedClauses[i] = ''.join(thestringtochange)
 		
@@ -170,9 +202,10 @@ class Population:
 		
 		#Reset the parents list
 		self.theparentlist = []
-		#Set the expression to new one
+		#Set the expression to the new one
 		self.theExpression = thenewExpression
-		#ReEvaluate the expression see if it has found the solution
+		
+		#ReEvaluate the expression to see if it has found the solution
 		self.__ReEvaluateExpression(self.theExpression)
 			
 	#Evaluates the expression
@@ -186,38 +219,52 @@ class Population:
 		#Temporary variable for parsing
 		referenceCopy = ""
 		#List of the return values for each clause
-		self.clauseReturnValueslist = []
+		clauseReturnValueslist = []
 		#Loop through expression and make a copy with the literals 
 		#replaced with numbers accordingly
 		for i in range(len(self.theExpression)):
+			#If the i is equal to )
 			if(self.theExpression[i] == ")"):
+				#Append it to the copy
 				expressionCopy += self.theExpression[i]
+				#Append it to the reference copy
 				referenceCopy += self.theExpression[i]
+				#Append it to the list
 				self.theExpressionReference.append(referenceCopy)
+				#Increase number of clauses
 				self.numberofclauses += 1
+				#Set total clauses
 				self.totalclauses = self.numberofclauses				
 				#Create Chromosome Object 
 				chromosome = Chromosome(expressionCopy)
 				#Evaluate the clause that is made of numbers and return its value
 				thevalue = chromosome.EvaluateClause()
-				print("To be selected")
-				print(chromosome.getEvaluatedClause())
-				self.theEvaluatedClauses.append(chromosome.getEvaluatedClause())
+				#Append the evaluated clause to the list
+				self.theEvaluatedClauses.append(chromosome.getClause())
 				#The list that will be used for selection
-				self.theSelectedMembers.append(chromosome.getEvaluatedClause())
-				if thevalue == 1:
+				self.theSelectedMembers.append(chromosome.getClause())
+				#If value is equal to 1
+				if(thevalue == 1):
+					#Increase fitness score
 					self.fitnessscore += 1
-				self.clauseReturnValueslist.append(thevalue)
+				#Append to the list
+				clauseReturnValueslist.append(thevalue)
 				#Reset to empty, so as it continues to loop it will evaluate next clause
 				expressionCopy = ""
 				referenceCopy = ""
+			#Elif the dictionary has the key
 			elif(self.dictionary.has_key(self.theExpression[i])):
+				#Add to the reference copy
 				referenceCopy += self.theExpression[i]
+				#Add it to the copy
 				expressionCopy += str(self.dictionary.get(self.theExpression[i]))
+			#Else
 			else:
+				#Add to the copy
 				expressionCopy += self.theExpression[i]
+				#Add to the reference copy
 				referenceCopy += self.theExpression[i]
-				
+		#Reset the number of clauses
 		self.numberofclauses = 0
 		#Now to find the value of an expression you must use the AND operation for each
 		#returned value of each clause.
@@ -225,14 +272,19 @@ class Population:
 		#in the list. If there is a 0, then performing the AND operations would result in 0.
 		#If only 1s are present in the list then using the AND operation will result in a 1.
 		theexpressionvalue = 0
-		if 0 in self.clauseReturnValueslist:
+		#If there is a 0 in the list
+		if 0 in clauseReturnValueslist:
+			#Set to 0
 			theexpressionvalue = 0
+		#Else
 		else:
+			#Set to 1
 			theexpressionvalue = 1
-		
+			
+		#Return theexpressionvalue
 		return theexpressionvalue
 	
-	#Evaluate the expression on init
+	#Evaluate the expression on init so the loop can run
 	def __EvaluateOnInit(self):
 		#The value of the expression
 		thevalue = 0
@@ -240,29 +292,35 @@ class Population:
 		self.fitnessscore = 0
 		#Temporary variable for parsing
 		expressionCopy = ""
-		#List of the return values for each clause
-		self.clauseReturnValueslist = []
 		#Loop through expression and make a copy with the literals 
 		#replaced with numbers accordingly
 		for s in self.theExpression:
-			if(s == ")"):
+			#If s == )
+			if (s == ")"):
+				#Add it to the copy
 				expressionCopy += s
+				#Increase th eclause count by 1
 				self.numberofclauses += 1
+				#Set total clauses for checking 
 				self.totalclauses = self.numberofclauses
 				#Create Chromosome Object 
 				chromosome = Chromosome(expressionCopy)
 				#Evaluate the clause that is made of numbers and return its value
 				thevalue = chromosome.EvaluateClause()
-				if thevalue == 1:
+				#If the value is 1
+				if (thevalue == 1):
+					#Increase the fitness score
 					self.fitnessscore += 1
-				self.clauseReturnValueslist.append(thevalue)
 				#Reset to empty, so as it continues to loop it will evaluate next clause
-				expressionCopy = ""				
+				expressionCopy = ""
+			#Elif the dictionary has this key
 			elif(self.dictionary.has_key(s)):
+				#Add it to the copy
 				expressionCopy += str(self.dictionary.get(s))
+			#Else add to the copy
 			else:
 				expressionCopy += s
-
+		#Reset the number of clauses
 		self.numberofclauses = 0
 		
 	#Selects the members based on fitness
@@ -273,9 +331,7 @@ class Population:
 		parent1index = random.randint(0,length-1)
 		#Set parent1 to the index of the list
 		parent1 = self.theSelectedMembers[parent1index]
-		c = Chromosome(parent1)
-		print("This is to be reset Parent1")
-		print(parent1)
+
 		#Append it to the list
 		self.theparentlist.append(parent1)
 		#Delete this of the list..this prevents both parents being
@@ -288,8 +344,7 @@ class Population:
 		parent2index = random.randint(0,length-1)
 		#Set parent2 to the index of the list
 		parent2 = self.theSelectedMembers[parent2index]
-		print("This is to be reset Parent2")
-		print(parent2)
+
 		#Append it to the list
 		self.theparentlist.append(parent2)
 		#Delete this of the list..this prevents both parents being
@@ -305,18 +360,16 @@ class Population:
 		sibling1 = []
 		sibling2 = []
 		
-		#Loop through the selected clause and check if the the index is a number if it is then add to list
+		#Loop through the selected clause and check if the the index is a number
 		for i in range(len(parent1)):
-			if parent1[i] == "1":
-				sibling1.append(parent1[i])
-			if parent1[i] == "0":
+			#If it is a number then add it to the list	
+			if parent1[i] == "1" or parent1[i] == "0":
 				sibling1.append(parent1[i])
 		
-		#Loop through the selected clause and check if the the index is a number if it is then add to list		
+		#Loop through the selected clause and check if the the index is a number
 		for i in range(len(parent2)):
-			if parent2[i] == "1":
-				sibling2.append(parent2[i])
-			if parent2[i] == "0":
+			#If it is a number then add it to the list		
+			if parent2[i] == "1" or parent2[i] == "0":
 				sibling2.append(parent2[i])
 		
 		#Get the length of the list
@@ -324,16 +377,22 @@ class Population:
 		#Get the length of the list
 		num2 = len(sibling2)
 		
-		#Use the ceiling function if num1 is an odd number
+		#If num1 is an odd number
 		if num1 % 2 != 0:
-			thenewnum = num1 / 2 
+			#Divide by 2
+			thenewnum = num1 / 2
+			#Use the ceiling function
 			num1 = math.ceil(thenewnum)
+			#Convert to int
 			num1 = int(thenewnum)
 		
-		#Use the ceiling function if num2 is an odd number
+		#If num2 is an odd number
 		if num2 % 2 != 0:
-			thenewnum = num2 / 2 
+			#Divide by 2
+			thenewnum = num2 / 2
+			#Use the ceiling function
 			num2 = math.ceil(thenewnum)
+			#Convert to int
 			num2 = int(thenewnum)
 
 		#Range from middle of string to end - Switch back ends
@@ -364,37 +423,43 @@ class Population:
 		self.fitnessscore = 0
 		#Temporary variable for parsing
 		expressionCopy = ""
-		#Temporary variable for parsing
-		referenceCopy = ""
-		#List of the return values for each clause
-		self.clauseReturnValueslist = []
 		#Loop through expression and make a copy with the literals 
 		#replaced with numbers accordingly
 		for i in range(len(self.theExpression)):
+			#If the index is )
 			if(self.theExpression[i] == ")"):
+				#Add it to the copy
 				expressionCopy += self.theExpression[i]
+				#Increment the number of clauses
 				self.numberofclauses += 1
+				#Set total clauses
 				self.totalclauses = self.numberofclauses				
 				#Create Chromosome Object 
 				chromosome = Chromosome(expressionCopy)
 				#Evaluate the clause that is made of numbers and return its value
 				thevalue = chromosome.EvaluateClause()
-				if thevalue == 1:
+				#If the value is 1
+				if (thevalue) == 1:
+					#Increment the fitness score
 					self.fitnessscore += 1
 				#Reset to empty, so as it continues to loop it will evaluate next clause
 				expressionCopy = ""
+			#Elif the index is found in the dictionary
 			elif(self.dictionary.has_key(self.theExpression[i])):
+				#Add it to the copy
 				expressionCopy += str(self.dictionary.get(self.theExpression[i]))
+			#Else
 			else:
+				#Add it to the copy
 				expressionCopy += self.theExpression[i]
-				
+		
+		#Reset the number of clauses
 		self.numberofclauses = 0
 
 	#Performs the NOT operation
 	def __NOT(self, nextNumber):
-	
 		#If the number is 1 then return 0
-		if nextNumber == 1:
+		if (nextNumber == 1):
 			return 0
 		#If number is not 1 then return 1
 		else:
@@ -407,8 +472,3 @@ class Population:
 	#Get the number of clauses
 	def getNumberOfClauses(self):
 		return self.totalclauses
-	
-	#Get the return values of all clauses
-	def getClauseEvalList(self):
-		return self.clauseReturnValueslist
-		

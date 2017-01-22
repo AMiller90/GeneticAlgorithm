@@ -3,3 +3,4 @@
 (!aVc*bVa)*(!cVa*bVd)
 (!b*aVc*d)*(cVb*aVd)*(!aVd*cVb)*(!cVa*bVdVa)
 (c*bVa*d)*(aVd*cVb)*(!bVd*cVa)*(!b*aVc*d)*(!cVa*bVdVa)
+(!c*bVd*a)*(!b*a*bVc)*(b*cVd*b)*(!aVc*dVa)*(!aVc*bVa)*(!cVa*bVd)*(!b*aVc*d)*(cVb*aVd)*(!aVd*cVb)*(!cVa*bVdVa)*(c*bVa*d)*(aVd*cVb)*(!bVd*cVa)*(!b*aVc*d)*(!cVa*bVdVa)

@@ -46,12 +46,12 @@ class Parser:
 		#Loop through the file contents
 		for index in range(num):
 			#If the current index of the file contents is not a new line
-			if fileContents[index] != "\n":
+			if (fileContents[index] != "\n"):
 				#Add it to the expression variable
 				theexpression += fileContents[index]
 			
 			#If the current index of the file contents is a new line
-			if fileContents[index] == "\n":
+			if (fileContents[index] == "\n"):
 				#Sort the literals
 				theliterals.sort()
 				#Increase the line count
@@ -75,7 +75,7 @@ class Parser:
 			#Else
 			else:
 				#Check if the index is inside the literals list, if it is
-				if fileContents[index] in theliterals:
+				if (fileContents[index] in theliterals):
 					#Just continue
 					continue;
 				#If the index is inside the dictiontary then..
