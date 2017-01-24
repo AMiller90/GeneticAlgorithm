@@ -1,4 +1,7 @@
-(aVb)*(!cVd)
+(a)*(b)*(!c)*(!cVd)
+(a)*(b)*(c)*(d)*(e)*(f)*(g)*(h)*(i)*(!m)
+(!aVhVf)*(!bVc)
+(!bVc)*(a)
 (aVbVd)*(!cVdVe)
 (!aVb)*(!dVa)*(fVb)
 (!aVfVdVb)*(!cVaVbVd)

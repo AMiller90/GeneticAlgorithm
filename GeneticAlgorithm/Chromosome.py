@@ -4,6 +4,11 @@ class Chromosome:
 	def __init__(self, newClause):
 		#The clause to be used
 		self.theClause = newClause
+		self.dictionary = {'a': 1, 'b': 0, 'c': 1, 'd': 0, 'e': 1, 'f': 0,
+						   'g': 1, 'h': 0, 'i': 1, 'j': 0, 'k': 1, 'l': 0,
+						   'm': 1, 'n': 0, 'o': 1, 'p': 0, 'q': 1, 'r': 0,
+						   's': 1, 't': 0, 'u': 1, 'v': 0, 'w': 1, 'x': 0,
+						   'y': 1, 'z': 1}
 		
 	#Get the clause
 	def getClause(self):
@@ -33,7 +38,13 @@ class Chromosome:
 			elif theEvaluatedClause[index] == "*" and theEvaluatedClause[index+1] != "(":
 				#Perform the AND operation on the previous index and next index then return the value
 				thereturnvalue = self.__AND(int(thereturnvalue),int(theEvaluatedClause[index+1]))
-		
+			elif theEvaluatedClause[index] in self.dictionary:
+				thevalue = self.dictionary[theEvaluatedClause[index]]
+				if theEvaluatedClause[index-1] == "(" and theEvaluatedClause[index+1] == ")":
+					thereturnvalue = thevalue
+			elif theEvaluatedClause[index-1] == "(" and theEvaluatedClause[index+1] == ")":
+					thereturnvalue = theEvaluatedClause[index]
+					
 		#convert back to string for clarity
 		self.theClause = ''.join(theEvaluatedClause)
 		

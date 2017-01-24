@@ -1,5 +1,6 @@
 from Parser import *
 from Population import *
+import time
 
 '''The Algorithm 
 	begin
@@ -23,6 +24,8 @@ def theAlgorithm(theExpression):
 	population = Population(theExpression)
 	#Initialize the generation count
 	theGeneration = 0
+	#Get the start time
+	start = time.time()
 	
 	#while the fitness score is not equal to the total number of clauses
 	while population.getFitnessScore() != population.getNumberOfClauses():
@@ -37,10 +40,15 @@ def theAlgorithm(theExpression):
 		print("Solving")
 		#Step5 - Increment generation
 		theGeneration += 1
-		
+	
+	
+	end = time.time()
+	
+	print("The Solution Gene")
 	print(population.getSolutionGene())
-	print("The Generation")
-	print(theGeneration)
+	#Get seconds
+	seconds = (end - start) / 60
+	print(str(theGeneration) + " generations in: " + str(round(seconds,1)) + " seconds.")
 
 #The main function
 def main():

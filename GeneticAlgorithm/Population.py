@@ -18,7 +18,12 @@ class Population:
 		#Number of clauses reference
 		self.numberofclauses = 0
 		#The dictionary used for mapping values
-		self.dictionary = {'a': 1, 'b': 0, 'c': 1, 'd': 0, 'e':1, 'f':0}
+		self.dictionary = {'a': 1, 'b': 0, 'c': 1, 'd': 0, 'e': 1, 'f': 0,
+						   'g': 1, 'h': 0, 'i': 1, 'j': 0, 'k': 1, 'l': 0,
+						   'm': 1, 'n': 0, 'o': 1, 'p': 0, 'q': 1, 'r': 0,
+						   's': 1, 't': 0, 'u': 1, 'v': 0, 'w': 1, 'x': 0,
+						   'y': 1, 'z': 1}
+						   
 		#The members selected reference
 		self.theSelectedMembers = []
 		#The offspring reference
@@ -79,7 +84,8 @@ class Population:
 				#Set the clause to the expression clause that wasnt
 				#chosen as a parent
 				self.theEvaluatedClauses[i] = self.theExpressionReference[i]
-				
+		
+		#Clear the reference list
 		self.theExpressionReference = []
 		
 		#The chance of mutating the first sibling
@@ -96,7 +102,7 @@ class Population:
 				self.theOffspring[mutationRate1] = '1'
 		
 		#The chance of mutating the second sibling
-		if mutationRate2 > 0:
+		if mutationRate2 >= 0:
 			#Mutate the given index
 			#If the current offspring is a 1
 			if self.theOffspring[mutationRate2] == '1':
@@ -171,23 +177,26 @@ class Population:
 		
 		#Change dictionary values
 		for index in range(len(self.theInitialExpression)):
+			#If its in the dictionary
 			if self.theInitialExpression[index] in self.dictionary:
+				#Get the index 
 				if(thenewExpression[index] == "1"):
+					#Grab the key
 					thekey = str(self.theInitialExpression[index])	
+					#Grab the value
 					thevalue = int(thenewExpression[index])
+					#Set new value
 					self.dictionary[thekey] = thevalue
 				elif(thenewExpression[index] == "0"):
-					thekey = str(self.theInitialExpression[index])	
+					#Grab the key
+					thekey = str(self.theInitialExpression[index])
+					#Grab the value
 					thevalue = int(thenewExpression[index])
+					#Set new value
 					self.dictionary[thekey] = thevalue
-			
 			
 		#ReEvaluate the expression to see if it has found the solution
 		self.__ReEvaluateExpression(self.theExpression)
-		
-		#Check if expression value is equal to 1
-		if self.fitnessscore == self.totalclauses:
-			self.theExpression = self.theInitialExpression
 			
 	#Evaluates the expression
 	def EvaluateExpression(self):
@@ -377,11 +386,13 @@ class Population:
 			#Convert to int
 			num2 = int(thenewnum)
 
-		#Range from middle of string to end - Switch back ends
-		for i in range(num1/2,num1):
-			temp = sibling1[i]
-			sibling1[i] = sibling2[i]
-			sibling2[i] = temp
+		#Prevent breaking
+		if num2 > num1:
+			#Range from middle of string to end - Switch back ends
+			for i in range(num1/2,num1):
+				temp = sibling1[i]
+				sibling1[i] = sibling2[i]
+				sibling2[i] = temp
 		
 
 		#Range from front to back - to switch the literal values to its opposite
@@ -416,11 +427,12 @@ class Population:
 				#Increment the number of clauses
 				self.numberofclauses += 1
 				#Set total clauses
-				self.totalclauses = self.numberofclauses				
+				self.totalclauses = self.numberofclauses	
 				#Create Chromosome Object 
 				chromosome = Chromosome(expressionCopy)
 				#Evaluate the clause that is made of numbers and return its value
 				thevalue = chromosome.EvaluateClause()
+				thevalue = int(thevalue)
 				#If the value is 1
 				if (thevalue) == 1:
 					#Increment the fitness score
@@ -435,22 +447,23 @@ class Population:
 			else:
 				#Add it to the copy
 				expressionCopy += self.theExpression[i]
-		
+
 		#Reset the number of clauses
 		self.numberofclauses = 0
-
+		#Return the value
+		return self.fitnessscore
+		
 	#Get the literals in the expression
 	def getSolutionGene(self):
-		print("The initial Expression")
+		print("The Expression")
 		print(self.theInitialExpression)
 		print("\n")
-		print("The Solution Gene")
 		#Store the found literals
 		theLiteralsfound = []
 		#Store the number of the literal representation
 		thegenesolution = []
 		
-		for s in self.theExpression:
+		for s in self.theInitialExpression:
 			#If its already in the list
 			if (s in theLiteralsfound):
 				#Continue
