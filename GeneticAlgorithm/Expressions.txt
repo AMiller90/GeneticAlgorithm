@@ -1,5 +1,5 @@
 (aVb)*(!cVd)
 (aVbVd)*(!cVdVe)
-(a)*(b)*(!c)*(!d)
-(!aVfVbVd)*(!cVaVbVd)
-(!bVaVcVd)*(!cVbVdVf)*(!cVbVdVf)*(!aVdVcVb)*(!cVaVbVd)
+(!aVb)*(!dVa)*(fVb)
+(!aVfVdVb)*(!cVaVbVd)
+(!bVaVcVd)*(!cVbVdVf)*(!aVdVcVb)*(!cVaVbVd)
