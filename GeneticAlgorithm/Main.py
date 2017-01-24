@@ -38,8 +38,7 @@ def theAlgorithm(theExpression):
 		#Step5 - Increment generation
 		theGeneration += 1
 		
-	print("The Solution Expression")
-	print(population.getPopulation())
+	print(population.getSolutionGene())
 	print("The Generation")
 	print(theGeneration)
 
@@ -56,8 +55,8 @@ def main():
 	#Parses the file and finds all expressions in the file
 	p = Parser(thefile)
 	#Gets the list of expressions that were found in the file
-	lists = p.getExpressions()	
-	
+	lists = p.getExpressions()
+
 	#The Application Loop
 	while(applicationLoop):
 		#Prompt user how to quit

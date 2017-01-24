@@ -7,7 +7,7 @@ class Parser:
 	#Initialize Parser object
 	def __init__(self, filePath):
 		#This is used to map literals with values
-		self.dictionary = {'a': 1, 'b': 0, 'c': 1, 'd': 0}
+		self.dictionary = {'a': 1, 'b': 0, 'c': 1, 'd': 0, 'e': 1, 'f': 0}
 		#The total number of clauses
 		self.numberofclauses = 0
 		#The expression list used to hold the expressions found in the file

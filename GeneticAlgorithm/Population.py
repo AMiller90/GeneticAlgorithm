@@ -9,10 +9,8 @@ class Population:
 	def __init__(self, newExpression):
 		#Set the expression
 		self.theExpression = newExpression
-		#Print
-		print("The initial Expression")
-		print(self.theExpression)
-		print("\n")
+		#The initial expression
+		self.theInitialExpression = self.theExpression
 		#Fitness Score reference
 		self.fitnessscore = 0
 		#Total Clauses reference
@@ -20,7 +18,7 @@ class Population:
 		#Number of clauses reference
 		self.numberofclauses = 0
 		#The dictionary used for mapping values
-		self.dictionary = {'a': 1, 'b': 0, 'c': 1, 'd': 0}
+		self.dictionary = {'a': 1, 'b': 0, 'c': 1, 'd': 0, 'e':1, 'f':0}
 		#The members selected reference
 		self.theSelectedMembers = []
 		#The offspring reference
@@ -65,7 +63,6 @@ class Population:
 		par1 = list(self.theparentlist[0])
 		par2 = list(self.theparentlist[1])
 
-		
 		#Loop through and find the parents in the list
 		#Store the index for future changes
 		for i in range(len(self.theEvaluatedClauses)):
@@ -159,40 +156,7 @@ class Population:
 			thelisttochange[0] = ""
 			#Set the clause to the list converted to a string
 			self.theEvaluatedClauses[0] = ''.join(thelisttochange)
-		
-		#Loop through the list of changed values and make them literals
-		for i in range(len(self.theEvaluatedClauses)):
-			#Convert current string to list for changing
-			thestringtochange = list(self.theEvaluatedClauses[i])
-			#Loop through the list to change
-			for index in range(len(thestringtochange)):
-				#If the index is a 1
-				if (thestringtochange[index] == "1"):
-					#We will randomize so it wont always be the same literal
-					number = random.randint(0,1)
-					#If the number is a 1
-					if (number == 1):
-						#Set it to "a"
-						thestringtochange[index] = "a"
-					#Else
-					else:
-						#Set it to "c"
-						thestringtochange[index] = "c"
-				#Elif the index is 0
-				elif thestringtochange[index] == "0":
-					#We will randomize so it wont always be the same literal
-					number = random.randint(0,1)
-					#If the number is a 1
-					if (number == 1):
-						#Set it to "b"
-						thestringtochange[index] = "b"
-					#Else
-					else:
-						#Set it to "d"
-						thestringtochange[index] = "d"
-						
-			#Convert back to string and set it as the index value
-			self.theEvaluatedClauses[i] = ''.join(thestringtochange)
+
 		
 		#Convert list back to string
 		thenewExpression = ''.join(self.theEvaluatedClauses)
@@ -205,8 +169,25 @@ class Population:
 		#Set the expression to the new one
 		self.theExpression = thenewExpression
 		
+		#Change dictionary values
+		for index in range(len(self.theInitialExpression)):
+			if self.theInitialExpression[index] in self.dictionary:
+				if(thenewExpression[index] == "1"):
+					thekey = str(self.theInitialExpression[index])	
+					thevalue = int(thenewExpression[index])
+					self.dictionary[thekey] = thevalue
+				elif(thenewExpression[index] == "0"):
+					thekey = str(self.theInitialExpression[index])	
+					thevalue = int(thenewExpression[index])
+					self.dictionary[thekey] = thevalue
+			
+			
 		#ReEvaluate the expression to see if it has found the solution
 		self.__ReEvaluateExpression(self.theExpression)
+		
+		#Check if expression value is equal to 1
+		if self.fitnessscore == self.totalclauses:
+			self.theExpression = self.theInitialExpression
 			
 	#Evaluates the expression
 	def EvaluateExpression(self):
@@ -266,6 +247,7 @@ class Population:
 				referenceCopy += self.theExpression[i]
 		#Reset the number of clauses
 		self.numberofclauses = 0
+		
 		#Now to find the value of an expression you must use the AND operation for each
 		#returned value of each clause.
 		#However, do to the fact of using a list we only have to check if their is a 0
@@ -401,6 +383,7 @@ class Population:
 			sibling1[i] = sibling2[i]
 			sibling2[i] = temp
 		
+
 		#Range from front to back - to switch the literal values to its opposite
 		for i in range(0,num1/2):
 			thereturnvalue = self.__NOT(int(sibling1[i]))
@@ -456,6 +439,43 @@ class Population:
 		#Reset the number of clauses
 		self.numberofclauses = 0
 
+	#Get the literals in the expression
+	def getSolutionGene(self):
+		print("The initial Expression")
+		print(self.theInitialExpression)
+		print("\n")
+		print("The Solution Gene")
+		#Store the found literals
+		theLiteralsfound = []
+		#Store the number of the literal representation
+		thegenesolution = []
+		
+		for s in self.theExpression:
+			#If its already in the list
+			if (s in theLiteralsfound):
+				#Continue
+				continue;
+			#If the index is inside the dictiontary then..
+			elif s in self.dictionary:
+				#Add the character to the literals list
+				theLiteralsfound.append(s);
+		#Sort literals
+		theLiteralsfound.sort()
+		#Make into a string
+		theLiteralsfound = ''.join(theLiteralsfound)
+		
+		#Print the literals found
+		print(theLiteralsfound)
+		
+		#Loop through and append
+		for s in theLiteralsfound:
+			thegenesolution.append(str(self.dictionary.get(s)))
+		
+		#Make into a string
+		thegenesolution = ''.join(thegenesolution)
+		#Return the string 
+		return thegenesolution
+		
 	#Performs the NOT operation
 	def __NOT(self, nextNumber):
 		#If the number is 1 then return 0
