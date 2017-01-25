@@ -46,9 +46,9 @@ def theAlgorithm(theExpression):
 	
 	print("The Solution Gene")
 	print(population.getSolutionGene())
-	#Get seconds
-	seconds = (end - start) / 60
-	print(str(theGeneration) + " generations in: " + str(round(seconds,1)) + " seconds.")
+	#Get milliseconds
+	milliseconds = str(round((end - start) * 1000.0, 1)) 
+	print(str(theGeneration) + " generations in: " + milliseconds + " milliseconds.")
 
 #The main function
 def main():

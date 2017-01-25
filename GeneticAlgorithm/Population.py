@@ -67,7 +67,7 @@ class Population:
 		#sibling values
 		par1 = list(self.theparentlist[0])
 		par2 = list(self.theparentlist[1])
-
+		
 		#Loop through and find the parents in the list
 		#Store the index for future changes
 		for i in range(len(self.theEvaluatedClauses)):
@@ -79,11 +79,6 @@ class Population:
 			elif self.theEvaluatedClauses[i] == self.theparentlist[1]:
 				#Store its index
 				parent2index = i
-			#Else
-			else:
-				#Set the clause to the expression clause that wasnt
-				#chosen as a parent
-				self.theEvaluatedClauses[i] = self.theExpressionReference[i]
 		
 		#Clear the reference list
 		self.theExpressionReference = []
@@ -166,7 +161,7 @@ class Population:
 		
 		#Convert list back to string
 		thenewExpression = ''.join(self.theEvaluatedClauses)
-		
+
 		#Reset the list
 		self.theEvaluatedClauses = []
 		
@@ -175,18 +170,23 @@ class Population:
 		#Set the expression to the new one
 		self.theExpression = thenewExpression
 		
+		alreadychecked = []
+		
 		#Change dictionary values
 		for index in range(len(self.theInitialExpression)):
 			#If its in the dictionary
 			if self.theInitialExpression[index] in self.dictionary:
+				if self.theInitialExpression[index] in alreadychecked:
+					continue
 				#Get the index 
-				if(thenewExpression[index] == "1"):
+				elif(thenewExpression[index] == "1"):
 					#Grab the key
 					thekey = str(self.theInitialExpression[index])	
 					#Grab the value
 					thevalue = int(thenewExpression[index])
 					#Set new value
 					self.dictionary[thekey] = thevalue
+					alreadychecked.append(thekey )
 				elif(thenewExpression[index] == "0"):
 					#Grab the key
 					thekey = str(self.theInitialExpression[index])
@@ -194,7 +194,8 @@ class Population:
 					thevalue = int(thenewExpression[index])
 					#Set new value
 					self.dictionary[thekey] = thevalue
-			
+					alreadychecked.append(thekey )
+		
 		#ReEvaluate the expression to see if it has found the solution
 		self.__ReEvaluateExpression(self.theExpression)
 			
@@ -231,10 +232,9 @@ class Population:
 				thevalue = chromosome.EvaluateClause()
 				#Append the evaluated clause to the list
 				self.theEvaluatedClauses.append(chromosome.getClause())
-				#The list that will be used for selection
 				self.theSelectedMembers.append(chromosome.getClause())
 				#If value is equal to 1
-				if(thevalue == 1):
+				if thevalue == 1:
 					#Increase fitness score
 					self.fitnessscore += 1
 				#Append to the list
@@ -317,31 +317,35 @@ class Population:
 	#Selects the members based on fitness
 	def SelectMembers(self):
 		#Get the length 
-		length = len(self.theSelectedMembers)
+		length = len(self.theSelectedMembers)	
+		length = length-1
+		
 		#Get a random number
-		parent1index = random.randint(0,length-1)
+		parent1index = random.randint(0,length)
 		#Set parent1 to the index of the list
 		parent1 = self.theSelectedMembers[parent1index]
-
 		#Append it to the list
 		self.theparentlist.append(parent1)
 		#Delete this of the list..this prevents both parents being
 		#equal to one another
-		del self.theSelectedMembers[parent1index]
+		self.theSelectedMembers.remove(parent1)
 		
 		#Get the length 
 		length = len(self.theSelectedMembers)
+		length = length-1
+		
 		#Get a random number
-		parent2index = random.randint(0,length-1)
+		parent2index = random.randint(0,length)
 		#Set parent2 to the index of the list
 		parent2 = self.theSelectedMembers[parent2index]
-
+		
 		#Append it to the list
 		self.theparentlist.append(parent2)
 		#Delete this of the list..this prevents both parents being
 		#equal to one another
-		del self.theSelectedMembers[parent2index]
+		self.theSelectedMembers.remove(parent2)
 
+		self.theSelectedMembers = []
 		#Set the offspring
 		self.theOffspring = self.__MakeOffspring(parent1, parent2)
 		
