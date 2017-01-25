@@ -41,13 +41,15 @@ def theAlgorithm(theExpression):
 		#Step5 - Increment generation
 		theGeneration += 1
 	
-	
+	#Get the end time
 	end = time.time()
 	
+	#Print the Solution Gene
 	print("The Solution Gene")
 	print(population.getSolutionGene())
 	#Get milliseconds
-	milliseconds = str(round((end - start) * 1000.0, 1)) 
+	milliseconds = str(round((end - start) * 1000.0, 1))
+	#Print the milliseconds
 	print(str(theGeneration) + " generations in: " + milliseconds + " milliseconds.")
 
 #The main function

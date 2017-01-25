@@ -170,13 +170,16 @@ class Population:
 		#Set the expression to the new one
 		self.theExpression = thenewExpression
 		
+		#List to check for literals already found
 		alreadychecked = []
 		
 		#Change dictionary values
 		for index in range(len(self.theInitialExpression)):
 			#If its in the dictionary
 			if self.theInitialExpression[index] in self.dictionary:
+				#If the literal is already in the list
 				if self.theInitialExpression[index] in alreadychecked:
+					#Continue
 					continue
 				#Get the index 
 				elif(thenewExpression[index] == "1"):
@@ -186,7 +189,8 @@ class Population:
 					thevalue = int(thenewExpression[index])
 					#Set new value
 					self.dictionary[thekey] = thevalue
-					alreadychecked.append(thekey )
+					#Append the literal
+					alreadychecked.append(thekey)
 				elif(thenewExpression[index] == "0"):
 					#Grab the key
 					thekey = str(self.theInitialExpression[index])
@@ -194,7 +198,8 @@ class Population:
 					thevalue = int(thenewExpression[index])
 					#Set new value
 					self.dictionary[thekey] = thevalue
-					alreadychecked.append(thekey )
+					#Append the literal
+					alreadychecked.append(thekey)
 		
 		#ReEvaluate the expression to see if it has found the solution
 		self.__ReEvaluateExpression(self.theExpression)
@@ -394,6 +399,7 @@ class Population:
 		if num2 > num1:
 			#Range from middle of string to end - Switch back ends
 			for i in range(num1/2,num1):
+				#Swap values accordingly
 				temp = sibling1[i]
 				sibling1[i] = sibling2[i]
 				sibling2[i] = temp
@@ -459,6 +465,7 @@ class Population:
 		
 	#Get the literals in the expression
 	def getSolutionGene(self):
+		#Print the expression
 		print("The Expression")
 		print(self.theInitialExpression)
 		print("\n")
@@ -467,6 +474,7 @@ class Population:
 		#Store the number of the literal representation
 		thegenesolution = []
 		
+		#Loop through the initial expression
 		for s in self.theInitialExpression:
 			#If its already in the list
 			if (s in theLiteralsfound):
@@ -476,6 +484,7 @@ class Population:
 			elif s in self.dictionary:
 				#Add the character to the literals list
 				theLiteralsfound.append(s);
+				
 		#Sort literals
 		theLiteralsfound.sort()
 		#Make into a string
@@ -492,8 +501,8 @@ class Population:
 		thegenesolution = ''.join(thegenesolution)
 		#Return the string 
 		return thegenesolution
-		
-	#Performs the NOT operation
+	
+		#Performs the NOT operation
 	def __NOT(self, nextNumber):
 		#If the number is 1 then return 0
 		if (nextNumber == 1):

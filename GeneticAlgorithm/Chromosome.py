@@ -4,11 +4,6 @@ class Chromosome:
 	def __init__(self, newClause):
 		#The clause to be used
 		self.theClause = newClause
-		self.dictionary = {'a': 1, 'b': 0, 'c': 1, 'd': 0, 'e': 1, 'f': 0,
-						   'g': 1, 'h': 0, 'i': 1, 'j': 0, 'k': 1, 'l': 0,
-						   'm': 1, 'n': 0, 'o': 1, 'p': 0, 'q': 1, 'r': 0,
-						   's': 1, 't': 0, 'u': 1, 'v': 0, 'w': 1, 'x': 0,
-						   'y': 1, 'z': 1}
 		
 	#Get the clause
 	def getClause(self):
@@ -30,8 +25,8 @@ class Chromosome:
 				thereturnvalue = str(thereturnvalue)
 				#Set the index to its new value
 				theEvaluatedClause[index+1] = thereturnvalue;				
-			#If the index is equal to V
-			elif theEvaluatedClause[index] == "V":
+			#If the index is equal to V and the next index is not equal to !
+			elif theEvaluatedClause[index] == "V" and theEvaluatedClause[index+1] != "!":
 				#Perform the OR operation on the previous index and next index then return the value
 				thereturnvalue = self.__OR(int(theEvaluatedClause[index-1]),int(theEvaluatedClause[index+1]))
 			#If the index is equal to * and the next index is not equal to )
