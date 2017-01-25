@@ -466,9 +466,10 @@ class Population:
 	#Get the literals in the expression
 	def getSolutionGene(self):
 		#Print the expression
+		print("\n")
 		print("The Expression")
 		print(self.theInitialExpression)
-		print("\n")
+		
 		#Store the found literals
 		theLiteralsfound = []
 		#Store the number of the literal representation
@@ -491,12 +492,15 @@ class Population:
 		theLiteralsfound = ''.join(theLiteralsfound)
 		
 		#Print the literals found
+		print("The Literals")
 		print(theLiteralsfound)
 		
 		#Loop through and append
 		for s in theLiteralsfound:
 			thegenesolution.append(str(self.dictionary.get(s)))
 		
+		#Print the Solution Gene
+		print("The Solution Gene")
 		#Make into a string
 		thegenesolution = ''.join(thegenesolution)
 		#Return the string 

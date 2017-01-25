@@ -44,8 +44,6 @@ def theAlgorithm(theExpression):
 	#Get the end time
 	end = time.time()
 	
-	#Print the Solution Gene
-	print("The Solution Gene")
 	print(population.getSolutionGene())
 	#Get milliseconds
 	milliseconds = str(round((end - start) * 1000.0, 1))
@@ -70,6 +68,7 @@ def main():
 	#The Application Loop
 	while(applicationLoop):
 		#Prompt user how to quit
+		print("\n")
 		print("Enter 0 to quit")
 		#Prompt the user to input the line number of the expression to evaluate
 		expressionIndex = input("Enter the line number of the expression to evaluate: ")
