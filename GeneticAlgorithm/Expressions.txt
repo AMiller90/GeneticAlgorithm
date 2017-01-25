@@ -4,4 +4,4 @@
 (hVd)*(bVfVd)
 (a)*(b)*(c)*(d)*(e)*(f)*(g)*(h)*(i)*(!m)
 (!aVc)*(!aVcV!e)*(!bVcVdV!e)*(aV!bVc)*(!eVf)
-(!a)*(!aVc)*(!bVfVd)*(!bVcVdV!e)
+(!aVb)*(!aVc)*(!bVfVd)*(!bVcVdV!e)
